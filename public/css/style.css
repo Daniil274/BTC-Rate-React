@@ -1,0 +1,77 @@
+body {
+    background-color: #222222;
+    margin: 0;
+    min-height: 180px;
+    padding: 0;
+    width: 235px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+.modal-header{
+    border: none;
+}
+.arrow{
+    margin-bottom: 5px;
+    height: 30px;
+}
+.dark{
+    color: white;
+}
+.btc-data{
+    font-size: large;
+    margin-bottom: -5px !important;
+    margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+#more.btn-warning{
+    margin-top: 5px;
+    width: 100%;
+    border-radius: 0px;
+}
+.m-l-30{
+    margin-left: 30px;
+}
+.cal{
+    padding: 2px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; 
+}
+#calculator-input{
+    background-color:  #222222;
+}
+.form-control{
+    color: white !important;
+    border-color: #ffca2c;
+}
+input#calculator-input{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+button#calculate-button{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+p.result{
+    text-align: center;
+    margin: auto;
+    font-size: 1rem;
+}
+.form-check-input:checked[type=radio] {
+    background-color: rgb(255, 193, 7) !important;
+}
+
+.form-check-input:checked {
+    background-color: transparent !important; 
+     border-color:  transparent !important;
+}
+.form-check-input:focus {
+     border-color: transparent !important;
+    outline: 0;
+     box-shadow: 0 0 0 0.25rem transparent !important; 
+}
+div#min{
+    margin-top:10px;
+}
