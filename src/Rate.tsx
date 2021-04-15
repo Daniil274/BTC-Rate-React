@@ -5,23 +5,23 @@ class Rate extends React.Component<any, any>{
         super(param);
         this.state={
             usd:{
-                base: "",
-                target: "",
-                price: null,
-                volume: null,
-                change: null
+                base: "" as string,
+                target: "" as string,
+                price: null as number|null,
+                volume: null as number|null,
+                change: null as number|null
             }, rub:{
-                base: "",
-                target: "",
-                price: null,
-                volume: null,
-                change: null
+                base: "" as string,
+                target: "" as string,
+                price: null as number|null,
+                volume: null as number|null,
+                change: null as number|null,
             },
         };
         this.getData = this.getData.bind(this);
         this.getData();
     }
-    async getData(){
+    private async getData(){
         const responseUSD = await fetch('https://api.cryptonator.com/api/ticker/btc-usd')
         let usd: valuteData = await responseUSD.json()
         const responseRub = await fetch('https://api.cryptonator.com/api/ticker/btc-rub')

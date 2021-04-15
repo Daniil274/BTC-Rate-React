@@ -12,15 +12,16 @@ class Calculator extends React.Component {
     private resultRUB: React.RefObject<HTMLParagraphElement>;
     private calculatorInput: React.RefObject<HTMLInputElement>;
     private resultUSD: React.RefObject<HTMLParagraphElement>;
-
-    constructor(p: any) {
+    readonly state:stateType;
+    public constructor(p: any) {
         super(p);
-        this.state = {
+
+        this.state= {
             RUB:localStorage.getItem('RUB'),
             USD:localStorage.getItem('USD'),
             result:{
-                RUB:"",
-                USD:""
+                RUB:"" as string,
+                USD:"" as string
             },
         };
         this.resultRUB = React.createRef();
@@ -82,6 +83,7 @@ class Calculator extends React.Component {
             case "close-calc":
                 this.CalcContainer.current?.classList.add('d-none');
                 this.CalcOpenBtn.current?.classList.remove('d-none');
+                this.setState({result:{RUB:"",USD:""}})
                 break;
             default:
                 break;
@@ -107,7 +109,6 @@ class Calculator extends React.Component {
                         className="btn btn-warning w-100 text-white rounded-0">Калькулятор
                 </button>
                 <div ref={this.CalcContainer} className="container radio_buttons d-none" id="calculator">
-                    <hr/>
                     <form onChange={this.RadioBoxChange} onSubmit={this.calculation}>
                         <div className="d-block">
                             <div className="form-check"><input ref={this.outBTCRadio} className="form-check-input radio"
@@ -143,12 +144,8 @@ class Calculator extends React.Component {
                                     type="submit">Расчёт
                             </button>
                         </div><div className={"mt-3"}><p ref={this.resultUSD} className="text-center mb-1">{
-                        // @ts-ignore
-
-                        this.state.result.USD}</p>
+                        this.state.result.USD }</p>
                         <p ref={this.resultRUB} className="text-center mb-1">{
-                            // @ts-ignore
-
                             this.state.result.RUB}</p></div>
                         <button id={"close-calc"} onClick={this.CalcEvent} className="btn w-100 text-center">Скрыть
                         </button>
@@ -162,7 +159,15 @@ class Calculator extends React.Component {
         );
     }
 }
-interface frBTCOut{
+type stateType = {
+    RUB:string |null,
+    USD:string | null,
+    result:{
+        USD:string,
+        RUB:string
+    }
+}
+type frBTCOut = {
     RUB:number,
     USD:number
 }
