@@ -10,7 +10,7 @@ ReactDOM.render(
     <Rate />
     <Calculator />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('btc-rate-checker')
 );
 
 // If you want to start measuring performance in your app, pass a function
