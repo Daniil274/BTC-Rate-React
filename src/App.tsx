@@ -1,6 +1,57 @@
 import React from "react";
+import "./rate.css";
+let state:any;
+export class Rate extends React.Component<any, any>{
+    constructor(param: any) {
+        super(param);
+        this.state={
+            usd:{
+                base: "" as string,
+                target: "" as string,
+                price: null as number|null,
+                volume: null as number|null,
+                change: null as number|null
+            }, rub:{
+                base: "" as string,
+                target: "" as string,
+                price: null as number|null,
+                volume: null as number|null,
+                change: null as number|null,
+            },
+        };
+        this.getData = this.getData.bind(this);
+        this.getData();
+    }
+    private async getData(){
+        const responseUSD = await fetch('https://api.cryptonator.com/api/ticker/btc-usd')
+        let usd: valuteData = await responseUSD.json()
+        const responseRub = await fetch('https://api.cryptonator.com/api/ticker/btc-rub')
+        let rub: valuteData = await responseRub.json()
+        if(rub.success && usd.success){
+            this.setState({
+                rub: rub.ticker,
+                usd: usd.ticker
+            })
+            // @ts-ignore
+            state = {
+                rub: rub.ticker,
+                usd: usd.ticker
+            };
+        }
+    }
+    render(){
+        return(
+            <div className="w-100 d-flex justify-content-center">
+                <div className="d-block">
+                    <p className={"rate"}>USD:<span className="value">{Math.round(this.state.usd.price)}$</span></p>
+                    <p className={"rate"}>RUB:<span className="value">{ Math.round(this.state.rub.price)}₽</span></p>
+                </div>
+            </div>
 
-class Calculator extends React.Component {
+        )
+    }
+}
+export class Calculator extends React.Component {
     private CalcContainer: React.RefObject<HTMLDivElement>;
     private CalcOpenBtn: React.RefObject<HTMLButtonElement>;
     private inBTCRadio: React.RefObject<HTMLInputElement>;
@@ -17,8 +68,6 @@ class Calculator extends React.Component {
         super(p);
 
         this.state= {
-            RUB:localStorage.getItem('RUB'),
-            USD:localStorage.getItem('USD'),
             result:{
                 RUB:"" as string,
                 USD:"" as string
@@ -50,31 +99,27 @@ class Calculator extends React.Component {
 
             resultFromBTC = {
                 // @ts-ignore
-                RUB:Math.round(parseFloat(this.state.RUB) * inputValue),
+                RUB:Math.round(parseFloat(state.rub.price) * inputValue),
                 // @ts-ignore
-                USD:Math.round(parseFloat(this.state.USD) * inputValue),
+                USD:Math.round(parseFloat(state.usd.price) * inputValue),
             }
             this.setState({result:{USD:resultFromBTC.USD.toString()+' $',RUB:resultFromBTC.RUB.toString()+' ₽'}})
         }if (this.inBTCRadio.current?.checked){
             if (this.frUSDRadio.current?.checked){
                 // @ts-ignore
-                let result:number = (inputValue/this.state.USD).toFixed(10);
+                let result:number = (inputValue/state.usd.price).toFixed(10);
                 this.setState({result:{RUB:"",USD:result.toString()+'₿'}})
             }else{
                 // @ts-ignore
-                let result:number = (inputValue/this.state.RUB).toFixed(10);
+                let result:number = (inputValue/state.rub.price).toFixed(10);
                 this.setState({result:{RUB:result.toString()+'₿',USD:""}})
             }
         }
-        // @ts-ignore
-        console.log(this.state.result)
     }
     CalcEvent(event: any) {
         event.preventDefault();
-        console.log(event.target.id)
         switch (event.target.id) {
             case this.CalcOpenBtn.current?.id:
-                console.log('open calc')
                 this.CalcContainer.current?.classList.remove('d-none');
                 this.CalcContainer.current?.classList.add('show-down');
 
@@ -106,7 +151,7 @@ class Calculator extends React.Component {
         return (
             <div>
                 <button onClick={this.CalcEvent} ref={this.CalcOpenBtn} id={"open-calc"}
-                        className="btn btn-warning w-100 text-white rounded-0">Калькулятор
+                        className="btn btn-warning w-100 text-white rounded-0">Calculator
                 </button>
                 <div ref={this.CalcContainer} className="container radio_buttons d-none" id="calculator">
                     <form onChange={this.RadioBoxChange} onSubmit={this.calculation}>
@@ -141,13 +186,13 @@ class Calculator extends React.Component {
                         <div className="container mt-2">
                             <input className="dark  form-control bg-dark" ref={this.calculatorInput} id="calculator-input" type="number"/>
                             <button className="calc dark form-control btn btn-warning btn-sm" onClick={this.calculation} ref={this.toCalculate} id="calculate-button"
-                                    type="submit">Расчёт
+                                    type="submit">Calculate
                             </button>
                         </div><div className={"mt-3"}><p ref={this.resultUSD} className="text-center mb-1">{
                         this.state.result.USD }</p>
                         <p ref={this.resultRUB} className="text-center mb-1">{
                             this.state.result.RUB}</p></div>
-                        <button id={"close-calc"} onClick={this.CalcEvent} className="btn w-100 text-center">Скрыть
+                        <button id={"close-calc"} onClick={this.CalcEvent} className="btn w-100 text-center">Hide
                         </button>
 
 
@@ -160,8 +205,6 @@ class Calculator extends React.Component {
     }
 }
 type stateType = {
-    RUB:string |null,
-    USD:string | null,
     result:{
         USD:string,
         RUB:string
@@ -171,4 +214,16 @@ type frBTCOut = {
     RUB:number,
     USD:number
 }
-export default Calculator;
+
+interface valuteData {
+    ticker: {
+        base: string,
+        target: string,
+        price: number,
+        volume: number,
+        change: number
+    },
+    timestamp: number,
+    success: boolean,
+    error: string
+}
